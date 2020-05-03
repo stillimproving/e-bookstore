@@ -1,0 +1,4 @@
+databases:
+    restdb.io:
+        host: https://bookstore-5217.restdb.io/rest/
+        apikey: 5e5f9cf028222370f14d4ece
