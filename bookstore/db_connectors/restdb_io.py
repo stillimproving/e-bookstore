@@ -52,20 +52,6 @@ class RestDBioConnector(AbstractDatabasesConnector):
             'cache-control': "no-cache"
         }
 
-    def _delete(self, id):
-        try:
-            response = requests.request("DELETE", self.url + '/' + id, headers=self.headers)
-            return id in response.text
-        except requests.exceptions.ConnectionError:
-            return False
-
-    def _update(self, id, values):
-        try:
-            response = requests.request("PATCH", self.url + '/' + id, data=dumps(values), headers=self.headers)
-            return id in response.text
-        except requests.exceptions.ConnectionError:
-            return False
-
     def _send_request(self, method, db, parm=None, data=None, item_id=None):
         query = f'?q={dumps(parm)}' if parm else ''
         url = self.url + db + ('/' + item_id + query if item_id else query)
