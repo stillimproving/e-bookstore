@@ -20,12 +20,12 @@ class DatabasesConnector(AbstractDatabasesConnector):
     def add_user(self, user: User) -> bool:
         return self._connector.add_user(user)
 
-    def del_user(self, user: User) -> bool:
-        return self._connector.del_user(user)
+    def delete_user(self, user: User) -> bool:
+        return self._connector.delete_user(user)
 
     def get_books(self, book_id: str = None, title: str = None, author: str = None, category: str = None,
                   publisher: str = None, isbn: str = None) -> List[Book]:
         return self._connector.get_books(book_id, title, author, category, publisher, isbn)
 
-    def update_book_quantity(self, book_id: str, quantity: int) -> bool:
-        return self._connector.update_book_quantity(book_id, quantity)
+    def update_book(self, book: Book) -> bool:
+        return self._connector.update_book(book)

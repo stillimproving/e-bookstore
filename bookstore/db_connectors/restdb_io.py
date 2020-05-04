@@ -52,21 +52,6 @@ class RestDBioConnector(AbstractDatabasesConnector):
             'cache-control': "no-cache"
         }
 
-    def _add(self, values):
-        try:
-            response = requests.request("POST", self.url, data=dumps(values), headers=self.headers)
-            return '_id' in response.text
-        except requests.exceptions.ConnectionError:
-            return False
-
-    def _search(self, parameters):
-        query = f'?q={dumps(parameters)}'
-        try:
-            response = requests.request("GET", self.url + query, headers=self.headers)
-            return loads(response.text)
-        except requests.exceptions.ConnectionError:
-            return None
-
     def _delete(self, id):
         try:
             response = requests.request("DELETE", self.url + '/' + id, headers=self.headers)
@@ -81,15 +66,30 @@ class RestDBioConnector(AbstractDatabasesConnector):
         except requests.exceptions.ConnectionError:
             return False
 
-    def _send_request(self, method, db, parm):
-        query = f'?q={dumps(parm)}'
-        url = self.url + db + query
+    def _send_request(self, method, db, parm=None, data=None, item_id=None):
+        query = f'?q={dumps(parm)}' if parm else ''
+        url = self.url + db + ('/' + item_id + query if item_id else query)
         try:
-            response = requests.request(method, url, headers=self.headers)
+            response = requests.request(method, url, data=data, headers=self.headers)
         except requests.exceptions.ConnectionError as err:
             logger.error('Restdb.io connection error: ' + str(err))
             return []
         return response
+
+    def delete_user(self, user: User) -> bool:
+        response = self._send_request(method='DELETE', db='customers', item_id=user.user_id)
+        return user.user_id in response.text
+
+    def update_user(self, user: User) -> bool:
+        data = {self._map_user[key]: val for key, val in vars(user).items() if key in self._map_user.keys()}
+        response = self._send_request(method='PUT', db='customers', data=dumps(data), item_id=user.user_id)
+        return user.user_id in response.text
+
+    def add_user(self, user: User) -> bool:
+        data = {self._map_user[key]: val for key, val in vars(user).items() if key in self._map_user.keys()}
+        data.pop('_id')
+        response = self._send_request(method='POST', db='customers', data=dumps(data))
+        return '_id' in response.text
 
     def get_user(self, email: str) -> Union[User, None]:
         response = self._send_request(method='GET', db='customers', parm={'Email': email})
@@ -102,15 +102,6 @@ class RestDBioConnector(AbstractDatabasesConnector):
 
         return User(**user_data)
 
-    def update_user(self, user: User) -> bool:
-        pass
-
-    def add_user(self, user: User) -> bool:
-        pass
-
-    def del_user(self, user: User) -> bool:
-        pass
-
     def get_books(self, book_id: str = None, title: str = None, author: str = None, category: str = None,
                   publisher: str = None, isbn: str = None) -> List[Book]:
 
@@ -121,5 +112,7 @@ class RestDBioConnector(AbstractDatabasesConnector):
                  for book in loads(response.text)]
         return [Book(**book) for book in books]
 
-    def update_book_quantity(self, book_id: str, quantity: int) -> bool:
-        pass
+    def update_book(self, book: Book) -> bool:
+        data = {self._map_user[key]: val for key, val in vars(book).items() if key in self._map_user.keys()}
+        response = self._send_request(method='PUT', db='books', data=dumps(data), item_id=book.book_id)
+        return book.book_id in response.text

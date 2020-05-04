@@ -19,7 +19,7 @@ class AbstractDatabasesConnector(ABC):
         pass
 
     @abstractmethod
-    def del_user(self, user: User) -> bool:
+    def delete_user(self, user: User) -> bool:
         pass
 
     @abstractmethod
@@ -28,5 +28,5 @@ class AbstractDatabasesConnector(ABC):
         pass
 
     @abstractmethod
-    def update_book_quantity(self, book_id: str, quantity: int) -> bool:
+    def update_book(self, book: Book) -> bool:
         pass

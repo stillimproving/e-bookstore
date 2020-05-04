@@ -22,8 +22,9 @@ class Book:
 
 
 class User:
-    def __init__(self, user_id: str, name: str = None, surname: str = None, password: str = None, street: str = None,
-                 email: str = None, phone: str = None, postal_code: str = None, city: str = None, country: str = None):
+    def __init__(self, user_id: str = None, name: str = None, surname: str = None, password: str = None,
+                 street: str = None, email: str = None, phone: str = None, postal_code: str = None, city: str = None,
+                 country: str = None):
         self.user_id = user_id
         self.name = name
         self.surname = surname
