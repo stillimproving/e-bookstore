@@ -1,5 +1,5 @@
 import requests
-from typing import List
+from typing import List, Union
 from json import dumps, loads
 
 from bookstore.models import User, Book
@@ -28,6 +28,19 @@ class RestDBioConnector(AbstractDatabasesConnector):
     }
     _inv_map_book = {v: k for k, v in _map_book.items()}
 
+    _map_user = {
+        'user_id': '_id',
+        'name': 'Name',
+        'surname': 'Surname',
+        'password': 'Password',
+        'street': 'Street',
+        'email': 'Email',
+        'phone': 'Phone',
+        'postal_code': 'Postal code',
+        'city': 'City',
+        'country': 'Country'
+    }
+    _inv_map_user = {v: k for k, v in _map_user.items()}
 
     def __init__(self, config=None):
         self._config = config or Config()
@@ -68,8 +81,26 @@ class RestDBioConnector(AbstractDatabasesConnector):
         except requests.exceptions.ConnectionError:
             return False
 
-    def get_user(self, email: str) -> User:
-        pass
+    def _send_request(self, method, db, parm):
+        query = f'?q={dumps(parm)}'
+        url = self.url + db + query
+        try:
+            response = requests.request(method, url, headers=self.headers)
+        except requests.exceptions.ConnectionError as err:
+            logger.error('Restdb.io connection error: ' + str(err))
+            return []
+        return response
+
+    def get_user(self, email: str) -> Union[User, None]:
+        response = self._send_request(method='GET', db='customers', parm={'Email': email})
+        data = loads(response.text)
+        if not data:
+            return
+
+        user_data = {self._inv_map_user.get(key): val for key, val in data[0].items()
+                     if key in self._inv_map_user.keys()}
+
+        return User(**user_data)
 
     def update_user(self, user: User) -> bool:
         pass
@@ -85,16 +116,10 @@ class RestDBioConnector(AbstractDatabasesConnector):
 
         parameters = {self._map_book[key]: val for key, val in locals().items()
                       if key in self._map_book and val is not None}
-        query = f'?q={dumps(parameters)}'
-        url = self.url + 'books' + query
-        try:
-            response = requests.request("GET", url, headers=self.headers)
-            books = [{self._inv_map_book.get(key): val for key, val in book.items() if key in self._inv_map_book.keys()}
-                     for book in loads(response.text)]
-            return [Book(**book) for book in books]
-        except requests.exceptions.ConnectionError as err:
-            logger.error('Restdb.io connection error: ' + str(err))
-            return []
+        response = self._send_request(method='GET', db='books', parm=parameters)
+        books = [{self._inv_map_book.get(key): val for key, val in book.items() if key in self._inv_map_book.keys()}
+                 for book in loads(response.text)]
+        return [Book(**book) for book in books]
 
     def update_book_quantity(self, book_id: str, quantity: int) -> bool:
         pass
