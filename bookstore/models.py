@@ -17,6 +17,9 @@ class Book:
         self.price = price
         self.discount = discount
 
+    def __str__(self):
+        return str(self.title)
+
 
 class User:
     def __init__(self, user_id: str, name: str = None, surname: str = None, password: str = None, street: str = None,
@@ -31,3 +34,6 @@ class User:
         self.postal_code = postal_code
         self.city = city
         self.country = country
+
+    def __str__(self):
+        return str(self.name + ' ' + self.surname)
