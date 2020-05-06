@@ -24,7 +24,8 @@ class RestDBioConnector(AbstractDatabasesConnector):
         'cover': 'Cover',
         'quantity': 'Quantity',
         'price': 'Price',
-        'discount': 'Discount'
+        'discount': 'Discount',
+        'cover_image': 'Cover image',
     }
     _inv_map_book = {v: k for k, v in _map_book.items()}
 
@@ -38,7 +39,7 @@ class RestDBioConnector(AbstractDatabasesConnector):
         'phone': 'Phone',
         'postal_code': 'Postal code',
         'city': 'City',
-        'country': 'Country'
+        'country': 'Country',
     }
     _inv_map_user = {v: k for k, v in _map_user.items()}
 

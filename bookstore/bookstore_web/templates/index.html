@@ -7,7 +7,7 @@
             <p>
                 <a href={{ book_link }}>{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})</a>
                 <br>
-                <a href={{ book_link }}><img src='https://bookstore-5217.restdb.io/media/{{ image_id }}?s=t' alt={{ book.title }} width='200px'></a>
+                <a href={{ book_link }}><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'></a>
                 <hr>
             </p>
         </div>

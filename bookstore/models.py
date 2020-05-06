@@ -1,7 +1,7 @@
 class Book:
-    def __init__(self, book_id: str, title: str = None, author: str = None, category: str = None, publisher: str = None,
-                 isbn: str = None, release: str = None, language: str = None, pages: str = None, hardcover: str = None,
-                 cover: str = None, quantity: int = None, price: int = None, discount: int = None):
+    def __init__(self, book_id, title=None, author=None, category=None, publisher=None, isbn=None, release=None,
+                 language=None, pages=None, hardcover=None, cover=None, quantity=None, price=None, discount=None,
+                 cover_image=None):
         self.book_id = book_id
         self.title = title
         self.author = author
@@ -16,6 +16,7 @@ class Book:
         self.quantity = quantity
         self.price = price
         self.discount = discount
+        self.cover_image = cover_image
 
     def __str__(self):
         return str(self.title)
