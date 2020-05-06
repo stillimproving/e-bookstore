@@ -1,16 +1,16 @@
 from flask import render_template, flash, redirect, url_for
 from bookstore.bookstore_web import app
 from bookstore.bookstore_web.forms import LoginForm
-# from flask_login import logout_user
-# from flask_login import login_required
+from bookstore.db_connectors import db_connector
 
 NAME = 'e-Bookstore'
 
 @app.route('/')
 @app.route('/index')
-# @login_required
+
 def index():
-    return render_template('index.html', global_title=NAME, after_title=" | Home")
+    books = db_connector.get_books( category='Thriller')[:5]
+    return render_template('index.html', global_title=NAME, after_title=" | Home", books = books, image_id='5eb2cd5ae332cd2600169a49', book_link='privacy_policy')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -19,11 +19,6 @@ def login():
         flash('Login requested for user {}, remember_me={}'.format(form.usermail.data, form.remember_me.data))
         return redirect(url_for('index'))
     return render_template('login.html', global_title=NAME, after_title=' | Log In', form=form)
-
-# @app.route('/logout')
-# def logout():
-#     logout_user()
-#     return redirect(url_for('index'))
 
 @app.route('/terms_of_use')
 def terms_of_use():
