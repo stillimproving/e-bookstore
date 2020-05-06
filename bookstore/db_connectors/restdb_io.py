@@ -6,7 +6,7 @@ from bookstore.models import User, Book
 from bookstore.config_service import Config
 from bookstore.bookstore_web import logger
 
-from .abstract_connector import AbstractDatabasesConnector
+from .abstract_connector import AbstractDatabasesConnector, BookSearchCategory
 
 
 class RestDBioConnector(AbstractDatabasesConnector):
@@ -43,6 +43,16 @@ class RestDBioConnector(AbstractDatabasesConnector):
     }
     _inv_map_user = {v: k for k, v in _map_user.items()}
 
+    _query_book_map = {
+        BookSearchCategory.ISBN: 'ISBN',
+        BookSearchCategory.ID: '_id',
+        BookSearchCategory.TITLE: 'Title',
+        BookSearchCategory.AUTHOR: 'Author',
+        BookSearchCategory.CATEGORY: 'Type',
+        BookSearchCategory.PUBLISHER: 'Publisher',
+        BookSearchCategory.DISCOUNT: 'Discount',
+    }
+
     def __init__(self, config=None):
         self._config = config or Config()
         self._db_config = self._config.get('databases', {}).get('restdb.io', {})
@@ -53,8 +63,8 @@ class RestDBioConnector(AbstractDatabasesConnector):
             'cache-control': "no-cache"
         }
 
-    def _send_request(self, method, db, parm=None, data=None, item_id=None):
-        query = f'?q={dumps(parm)}' if parm else ''
+    def _send_request(self, method, db, query=None, data=None, item_id=None):
+        query = f'?q={dumps(query)}' if query else ''
         url = self.url + db + ('/' + item_id + query if item_id else query)
         try:
             response = requests.request(method, url, data=data, headers=self.headers)
@@ -79,7 +89,7 @@ class RestDBioConnector(AbstractDatabasesConnector):
         return '_id' in response.text
 
     def get_user(self, email: str) -> Union[User, None]:
-        response = self._send_request(method='GET', db='customers', parm={'Email': email})
+        response = self._send_request(method='GET', db='customers', query={'Email': email})
         data = loads(response.text)
         if not data:
             return
@@ -89,17 +99,31 @@ class RestDBioConnector(AbstractDatabasesConnector):
 
         return User(**user_data)
 
-    def get_books(self, book_id: str = None, title: str = None, author: str = None, category: str = None,
-                  publisher: str = None, isbn: str = None) -> List[Book]:
-
-        parameters = {self._map_book[key]: val for key, val in locals().items()
-                      if key in self._map_book and val is not None}
-        response = self._send_request(method='GET', db='books', parm=parameters)
-        books = [{self._inv_map_book.get(key): val for key, val in book.items() if key in self._inv_map_book.keys()}
-                 for book in loads(response.text)]
-        return [Book(**book) for book in books]
-
     def update_book(self, book: Book) -> bool:
         data = {self._map_user[key]: val for key, val in vars(book).items() if key in self._map_user.keys()}
         response = self._send_request(method='PUT', db='books', data=dumps(data), item_id=book.book_id)
         return book.book_id in response.text
+
+    def search_books(self, category: BookSearchCategory, search_text: str, operator=None) -> List[Book]:
+
+        query = {self._query_book_map[category]: self._query_method(category, search_text, operator)}
+
+        response = self._send_request(method='GET', db='books', query=query)
+        books = [{self._inv_map_book.get(key): val for key, val in book.items() if key in self._inv_map_book.keys()}
+                 for book in loads(response.text)]
+        return [Book(**book) for book in books]
+
+    def _query_method(self, category: BookSearchCategory, search_text: str, operator=None):
+        if category in [BookSearchCategory.ISBN, BookSearchCategory.ID] or operator == '=':
+            return search_text
+        if category == BookSearchCategory.DISCOUNT:
+            operator = self._map_operators.get(operator) or '$gt'
+            return {operator: search_text}
+        return {"$regex": search_text}
+
+    _map_operators = {
+        '>': '$gt',
+        '=>': '$gte',
+        '<': '$lt',
+        '=<': '$lte'
+    }

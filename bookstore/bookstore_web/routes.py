@@ -1,7 +1,8 @@
 from flask import render_template, flash, redirect, url_for
 from bookstore.bookstore_web import app
 from bookstore.bookstore_web.forms import LoginForm
-from bookstore.db_connectors import db_connector
+from bookstore.db_connectors import db
+from bookstore.db_connectors.abstract_connector import BookSearchCategory
 
 NAME = 'e-Bookstore'
 
@@ -9,7 +10,7 @@ NAME = 'e-Bookstore'
 @app.route('/')
 @app.route('/index')
 def index():
-    books = db_connector.get_books(category='Thriller')[:5]
+    books = db.search_books(category=BookSearchCategory.DISCOUNT, search_text=0, operator='=')[:100]
     return render_template('index.html', global_title=NAME, after_title=" | Home", books=books,
                            book_link='privacy_policy')
 

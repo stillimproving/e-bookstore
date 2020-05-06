@@ -4,6 +4,16 @@ from typing import List
 from bookstore.models import User, Book
 
 
+class BookSearchCategory:
+    ID = 0
+    TITLE = 1
+    AUTHOR = 2
+    CATEGORY = 3
+    PUBLISHER = 4
+    ISBN = 5
+    DISCOUNT = 6
+
+
 class AbstractDatabasesConnector(ABC):
 
     @abstractmethod
@@ -23,10 +33,9 @@ class AbstractDatabasesConnector(ABC):
         pass
 
     @abstractmethod
-    def get_books(self, book_id: str = None, title: str = None, author: str = None, category: str = None,
-                  publisher: str = None, isbn: str = None) -> List[Book]:
+    def update_book(self, book: Book) -> bool:
         pass
 
     @abstractmethod
-    def update_book(self, book: Book) -> bool:
+    def search_books(self, category: BookSearchCategory, search_text: str, operator: str = None) -> List[Book]:
         pass
