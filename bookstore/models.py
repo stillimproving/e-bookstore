@@ -1,3 +1,6 @@
+from flask_login import UserMixin
+
+
 class Book:
     def __init__(self, book_id, title=None, author=None, category=None, publisher=None, isbn=None, release=None,
                  language=None, pages=None, hardcover=None, cover=None, quantity=None, price=None, discount=None,
@@ -22,7 +25,7 @@ class Book:
         return str(self.title)
 
 
-class User:
+class User(UserMixin):
     def __init__(self, user_id: str = None, name: str = None, surname: str = None, password: str = None,
                  street: str = None, email: str = None, phone: str = None, postal_code: str = None, city: str = None,
                  country: str = None):
@@ -37,5 +40,14 @@ class User:
         self.city = city
         self.country = country
 
+
     def __str__(self):
         return str(self.name + ' ' + self.surname)
+
+    def check_passwd(self, password):
+        if self.password!=password:
+            return False
+        return True
+
+    def get_id(self):
+        return self.email

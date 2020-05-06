@@ -9,11 +9,13 @@
         <div>
             {{ global_title }}:
             <a href={{ url_for('index') }}>Home</a>
-{#            {% if current_user.is_anonymous %}#}
+            {% if current_user.is_anonymous %}
                 <a href="{{ url_for('login') }}">Login</a>
-{#            {% else %}#}
-{#                <a href="{{ url_for('logout') }}">Logout</a>#}
-{#            {% endif %}#}
+            {% else %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="/">Account</a>
+                <a href="/">Cart</a>
+            {% endif %}
             </div>
         <hr>
     </header>

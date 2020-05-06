@@ -1,13 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Recomended</h1>
+    <form method="POST">
+        <p>
+            {{ search.search_input }}
+            {{ search.type }}
+            {{ search.loupe() }}
+        </p>
+    </form>
+    <hr>
+    <h1>We recommend you books with discount {{ discount }}% and even more!</h1>
     {% for book in books %}
         <div>
             <p>
-                <a href={{ book_link }}>{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }}) (Dscount: {{ book.discount }})</a>
+                {#<a href={{ book_link }}>#}{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})
                 <br>
-                <a href={{ book_link }}><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'></a>
+                <s>{{ '{:.2f}'.format(book.price) }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }}, discount: {{ '{:.0f}'.format(book.discount) }}%
+                <br>
+                {#<a href={{ book_link }}>#}<img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'>
+                {% if current_user.is_authenticated %}
+                    <br>Add to cart!
+                {% endif %}
                 <hr>
             </p>
         </div>
