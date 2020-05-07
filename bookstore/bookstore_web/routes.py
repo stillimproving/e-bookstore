@@ -3,9 +3,10 @@ from bookstore.bookstore_web import app
 from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm
 from bookstore.db_connectors import db
 from bookstore.db_connectors.abstract_connector import BookSearchCategory
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user, login_required
 
 NAME = 'e-Bookstore'
+CURRENCY = 'PLN'
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -16,7 +17,7 @@ def index():
     search = SearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
-    return render_template('index.html', global_title=NAME, after_title=" | Home", books=books, search=search, discount=discount)
+    return render_template('index.html', global_title=NAME, after_title=" | Home", currency=CURRENCY, books=books, search=search, discount=discount)
 
 @app.route('/results')
 def search_results(search):
@@ -54,7 +55,7 @@ def login():
         return redirect(url_for('index'))
     signup_form = SignupForm()
     if signup_form.validate_on_submit():
-        if db.get_user(signup_form.usermail.data):
+        if db.get_user(signup_form.email.data):
             flash('Given e-mail already registered')
             return redirect(url_for('login'))
     return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
@@ -63,6 +64,17 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/user')
+@login_required
+def user():
+    return render_template('user.html', global_title=NAME, after_title=' | Profile')
+
+@app.route('/item/<book_id>', methods=['GET'])
+def item(book_id):
+    book = db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]
+    return render_template('item.html', global_title=NAME, after_title=" | "+ book.title, currency=CURRENCY, book=book)
+
 
 @app.route('/terms_of_use')
 def terms_of_use():

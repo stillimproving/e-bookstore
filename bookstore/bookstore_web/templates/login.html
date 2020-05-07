@@ -25,23 +25,23 @@
     <h1>Sign In</h1>
     <form action="" method="post" novalidate>
         <p>
-            {{ signup_form.first_name.label }}<br>
-            {{ signup_form.first_name(size=32) }}
-            {% for error in signup_form.first_name.errors %}
+            {{ signup_form.name.label }}<br>
+            {{ signup_form.name(size=32) }}
+            {% for error in signup_form.name.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ signup_form.last_name.label }}<br>
-            {{ signup_form.last_name(size=32) }}
-            {% for error in signup_form.last_name.errors %}
+            {{ signup_form.surname.label }}<br>
+            {{ signup_form.surname(size=32) }}
+            {% for error in signup_form.surname.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ signup_form.usermail.label }}<br>
-            {{ signup_form.usermail(size=32) }}
-            {% for error in signup_form.usermail.errors %}
+            {{ signup_form.email.label }}<br>
+            {{ signup_form.email(size=32) }}
+            {% for error in signup_form.email.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>

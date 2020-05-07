@@ -13,11 +13,11 @@
     {% for book in books %}
         <div>
             <p>
-                {#<a href={{ book_link }}>#}{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})
+                <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})</a>
                 <br>
-                <s>{{ '{:.2f}'.format(book.price) }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }}, discount: {{ '{:.0f}'.format(book.discount) }}%
+                <s>{{ '{:.2f}'.format(book.price) }} {{ currency }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }} {{ currency }}, discount: {{ '{:.0f}'.format(book.discount) }}%
                 <br>
-                {#<a href={{ book_link }}>#}<img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'>
+                <a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'></a>
                 {% if current_user.is_authenticated %}
                     <br>Add to cart!
                 {% endif %}

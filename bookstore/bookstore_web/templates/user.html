@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>User: {{ current_user }}</h1>
+    <p>Email: {{ current_user.email }}</p>
+    <p>Phone: {{ current_user.phone }}</p>
+    <h3>Address:</h3>
+    <p>Street: {{ current_user.street }}</p>
+    <p>Postal code: {{ current_user.postal_code }}</p>
+    <p>City: {{ current_user.city }}</p>
+    <p>Country: {{ current_user.country }}</p>
+{% endblock %}

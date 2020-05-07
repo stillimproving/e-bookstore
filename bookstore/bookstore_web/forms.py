@@ -7,12 +7,12 @@ class LoginForm(FlaskForm):
     usermail = StringField('Email address', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Log In')
 
 class SignupForm(FlaskForm):
-    first_name = StringField('First name', validators=[DataRequired()])
-    last_name = StringField('Last name', validators=[DataRequired()])
-    usermail = StringField('Email address', validators=[DataRequired(), Email('Not an email address')])
+    name = StringField('First name', validators=[DataRequired()])
+    surname = StringField('Last name', validators=[DataRequired()])
+    email = StringField('Email address', validators=[DataRequired(), Email('Not an email address')])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password', message='Confirmation password doesn\'t match Password')])
     phone = StringField('Phone')
