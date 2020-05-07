@@ -15,6 +15,7 @@
                 <a href="{{ url_for('logout') }}">Logout</a>
                 <a href="{{ url_for('user') }}">Account</a>
                 <a href="/">Cart</a>
+                <div align="right";>Hello, {{ current_user }}</div>
             {% endif %}
             </div>
         <hr>

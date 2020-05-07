@@ -7,7 +7,7 @@ class LoginForm(FlaskForm):
     usermail = StringField('Email address', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Log In')
+    submit = SubmitField('Log In', render_kw={'id': 'login_submit'})
 
 class SignupForm(FlaskForm):
     name = StringField('First name', validators=[DataRequired()])
@@ -20,7 +20,7 @@ class SignupForm(FlaskForm):
     postal_code = StringField('Postal code')
     city = StringField('City')
     country = StringField('Country')
-    submit = SubmitField('Sign In')
+    submit = SubmitField('Sign In', render_kw={'id': 'signup_submit'})
 
 class SearchForm(Form):
     search_input = StringField('Search')

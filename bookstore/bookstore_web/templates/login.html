@@ -24,6 +24,7 @@
 
     <h1>Sign In</h1>
     <form action="" method="post" novalidate>
+        {{ signup_form.hidden_tag() }}
         <p>
             {{ signup_form.name.label }}<br>
             {{ signup_form.name(size=32) }}

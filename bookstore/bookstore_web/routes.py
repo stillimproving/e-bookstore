@@ -1,9 +1,11 @@
 from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
+
 from bookstore.bookstore_web import app
 from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm
 from bookstore.db_connectors import db
 from bookstore.db_connectors.abstract_connector import BookSearchCategory
-from flask_login import current_user, login_user, logout_user, login_required
+from bookstore.models import User
 
 NAME = 'e-Bookstore'
 CURRENCY = 'PLN'
@@ -44,8 +46,8 @@ def search_results(search):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    login_form = LoginForm()
-    if login_form.validate_on_submit():
+    login_form = LoginForm(prefix='log')
+    if login_form.submit.data and login_form.validate_on_submit():
         # flash('Login requested for user {}, remember_me={}'.format(form.usermail.data, form.remember_me.data))
         user = db.get_user(login_form.usermail.data)
         if not user or not user.check_passwd(login_form.password.data):
@@ -53,11 +55,29 @@ def login():
             return redirect(url_for('login'))
         login_user(user, remember=login_form.remember_me.data)
         return redirect(url_for('index'))
-    signup_form = SignupForm()
-    if signup_form.validate_on_submit():
+    signup_form = SignupForm(prefix='sign')
+    if signup_form.submit.data and signup_form.validate_on_submit():
         if db.get_user(signup_form.email.data):
             flash('Given e-mail already registered')
             return redirect(url_for('login'))
+
+        new_user = User(
+            name=signup_form.name.data,
+            surname=signup_form.surname.data,
+            password = signup_form.password.data,
+            street = signup_form.street.data,
+            email = signup_form.email.data,
+            phone = signup_form.phone.data,
+            postal_code = signup_form.postal_code.data,
+            city = signup_form.city.data,
+            country = signup_form.country.data
+        )
+        success=db.add_user(new_user)
+        if success:
+            flash('You are registered, plaease Log in!')
+        else:
+            flash('Something gone wrong, try again')
+        return redirect(url_for('login'))
     return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
 
 @app.route('/logout')
