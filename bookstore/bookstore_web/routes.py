@@ -53,12 +53,9 @@ def login():
         login_user(user, remember=login_form.remember_me.data)
         return redirect(url_for('index'))
     signup_form = SignupForm()
-    if signup_form.is_submitted():
+    if signup_form.validate_on_submit():
         if db.get_user(signup_form.usermail.data):
             flash('Given e-mail already registered')
-            return redirect(url_for('login'))
-        if signup_form.password.data != signup_form.confirm.data:
-            flash('Confirmation password doesn\'t mach password')
             return redirect(url_for('login'))
     return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
 
