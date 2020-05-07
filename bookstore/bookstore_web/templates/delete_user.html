@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>User deletion</h1>
+    Are you <u>sure</u>, you want delete your account?<br>
+    It's irreversible, all your data will be lost.<br>
+    <form action="" method="post" novalidate>
+        {{ delete_form.hidden_tag() }}
+        {{ delete_form.delete() }}
+    </form>
+{% endblock %}

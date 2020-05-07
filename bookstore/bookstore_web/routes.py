@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.datastructures import MultiDict
 
 from bookstore.bookstore_web import app
-from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm
+from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm, EditUserForm, ChangePasswordForm, DeleteUserForm
 from bookstore.db_connectors import db
 from bookstore.db_connectors.abstract_connector import BookSearchCategory
 from bookstore.models import User
@@ -80,15 +81,105 @@ def login():
         return redirect(url_for('login'))
     return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
 
+
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/user')
 @login_required
 def user():
     return render_template('user.html', global_title=NAME, after_title=' | Profile')
+
+
+@app.route('/edit_user', methods=['GET', 'POST'])
+@login_required
+def edit_user():
+    if request.method=='GET':
+        edit_user_form=EditUserForm(
+            formdata=MultiDict({
+            'name': current_user.name,
+            'surname': current_user.surname,
+            'phone': current_user.phone,
+            'street': current_user.street,
+            'postal_code': current_user.postal_code,
+            'city': current_user.city,
+            'country': current_user.country
+        })
+        )
+    else:
+        edit_user_form=EditUserForm()
+    if edit_user_form.validate_on_submit():
+        updated_user = User(
+            user_id=current_user.user_id,
+            email=current_user.email,
+            password=current_user.password,
+            name=edit_user_form.name.data,
+            surname=edit_user_form.surname.data,
+            street=edit_user_form.street.data,
+            phone=edit_user_form.phone.data,
+            postal_code=edit_user_form.postal_code.data,
+            city=edit_user_form.city.data,
+            country=edit_user_form.country.data
+        )
+        success = db.update_user(updated_user)
+        if success:
+            flash('Your data has been successfully edited!')
+            return redirect(url_for('user'))
+        else:
+            flash('Something gone wrong, try again')
+            return redirect(url_for('edit_user'))
+    return render_template('edit_user.html', global_title=NAME, after_title=' | Edit profile', edit_user_form=edit_user_form)
+
+
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    change_pass_form=ChangePasswordForm()
+    if change_pass_form.validate_on_submit():
+        if change_pass_form.old_password.data==current_user.password:
+            new_pass_user = User(
+                user_id=current_user.user_id,
+                email=current_user.email,
+                password=change_pass_form.new_password.data,
+                name=current_user.name,
+                surname=current_user.surname,
+                street=current_user.street,
+                phone=current_user.phone,
+                postal_code=current_user.postal_code,
+                city=current_user.city,
+                country=current_user.country
+            )
+            success = db.update_user(new_pass_user)
+            if success:
+                flash('Your password has been successfully changed!')
+                return redirect(url_for('user'))
+            else:
+                flash('Something gone wrong, try again')
+                return redirect(url_for('change_password'))
+        else:
+            flash('Invalid old password')
+            return redirect(url_for('change_password'))
+    return render_template('change_password.html', global_title=NAME, after_title=' | Change password', change_pass_form=change_pass_form)
+
+
+@app.route('/delete_user', methods=['GET', 'POST'])
+@login_required
+def delete_user():
+    delete_form = DeleteUserForm()
+    if delete_form.is_submitted():
+        del_user = current_user
+        success = db.delete_user(del_user)
+        if success:
+            flash('Goodbye! :(')
+            return redirect(url_for('logout'))
+        else:
+            flash('Something gone wrong, try again')
+            return redirect(url_for('delete_user'))
+    return render_template('delete_user.html', global_title=NAME, after_title=' | Delete account', delete_form=delete_form)
+
 
 @app.route('/item/<book_id>', methods=['GET'])
 def item(book_id):

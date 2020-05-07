@@ -9,6 +9,7 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In', render_kw={'id': 'login_submit'})
 
+
 class SignupForm(FlaskForm):
     name = StringField('First name', validators=[DataRequired()])
     surname = StringField('Last name', validators=[DataRequired()])
@@ -20,7 +21,9 @@ class SignupForm(FlaskForm):
     postal_code = StringField('Postal code')
     city = StringField('City')
     country = StringField('Country')
+    accept = BooleanField('I accept ', validators=[DataRequired()])
     submit = SubmitField('Sign In', render_kw={'id': 'signup_submit'})
+
 
 class SearchForm(Form):
     search_input = StringField('Search')
@@ -28,3 +31,24 @@ class SearchForm(Form):
                ('ISBN', 'ISBN')]
     type = SelectField('Search type', choices=choices)
     submit = SubmitField('🔍')
+
+
+class EditUserForm(FlaskForm):
+    name = StringField('First name', validators=[DataRequired()])
+    surname = StringField('Last name', validators=[DataRequired()])
+    phone = StringField('Phone')
+    street = StringField('Street')
+    postal_code = StringField('Postal code')
+    city = StringField('City')
+    country = StringField('Country')
+    submit = SubmitField('Submit')
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old password', validators=[DataRequired()])
+    new_password = PasswordField('New password', validators=[DataRequired()])
+    confirm = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('new_password', message='Confirmation password doesn\'t match New password')])
+    change = SubmitField('Change')
+
+
+class DeleteUserForm(FlaskForm):
+    delete = SubmitField('Delete me!')

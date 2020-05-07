@@ -96,6 +96,12 @@
 {#                <span style="color: red;">[{{ error }}]</span>#}
 {#            {% endfor %}#}
         </p>
+        <p>
+            {{ signup_form.accept() }}{{ signup_form.accept.label }}<a href={{ url_for('terms_of_use') }}>terms of use</a>.<br>
+            {% for error in signup_form.accept.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
 
         <p>{{ signup_form.submit() }}</p>
     </form>
