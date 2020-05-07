@@ -3,22 +3,99 @@
 {% block content %}
     <h1>Log In</h1>
     <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
+        {{ login_form.hidden_tag() }}
         <p>
-            {{ form.usermail.label }}<br>
-            {{ form.usermail(size=32) }}
-            {% for error in form.usermail.errors %}
+            {{ login_form.usermail.label }}<br>
+            {{ login_form.usermail(size=32) }}
+            {% for error in login_form.usermail.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
-            {% for error in form.password.errors %}
+            {{ login_form.password.label }}<br>
+            {{ login_form.password(size=32) }}
+            {% for error in login_form.password.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-        <p>{{ form.submit() }}</p>
+        <p>{{ login_form.remember_me() }} {{ login_form.remember_me.label }}</p>
+        <p>{{ login_form.submit() }}</p>
+    </form>
+
+    <h1>Sign In</h1>
+    <form action="" method="post" novalidate>
+        <p>
+            {{ signup_form.first_name.label }}<br>
+            {{ signup_form.first_name(size=32) }}
+            {% for error in signup_form.first_name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ signup_form.last_name.label }}<br>
+            {{ signup_form.last_name(size=32) }}
+            {% for error in signup_form.last_name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ signup_form.usermail.label }}<br>
+            {{ signup_form.usermail(size=32) }}
+            {% for error in signup_form.usermail.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ signup_form.password.label }}<br>
+            {{ signup_form.password(size=32) }}
+            {% for error in signup_form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ signup_form.confirm.label }}<br>
+            {{ signup_form.confirm(size=32) }}
+            {% for error in signup_form.confirm.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ signup_form.phone.label }}<br>
+            {{ signup_form.phone(size=12) }}
+{#            {% for error in signup_form.confirm.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+        </p>
+        <p>
+            {{ signup_form.street.label }}<br>
+            {{ signup_form.street(size=12) }}
+{#            {% for error in signup_form.confirm.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+        </p>
+        <p>
+            {{ signup_form.postal_code.label }}<br>
+            {{ signup_form.postal_code(size=12) }}
+{#            {% for error in signup_form.confirm.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+        </p>
+        <p>
+            {{ signup_form.city.label }}<br>
+            {{ signup_form.city(size=12) }}
+{#            {% for error in signup_form.confirm.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+        </p>
+        <p>
+            {{ signup_form.country.label }}<br>
+            {{ signup_form.country(size=12) }}
+{#            {% for error in signup_form.confirm.errors %}#}
+{#                <span style="color: red;">[{{ error }}]</span>#}
+{#            {% endfor %}#}
+        </p>
+
+        <p>{{ signup_form.submit() }}</p>
     </form>
 {% endblock %}

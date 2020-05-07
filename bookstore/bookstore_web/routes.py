@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from bookstore.bookstore_web import app
-from bookstore.bookstore_web.forms import LoginForm, SearchForm
+from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm
 from bookstore.db_connectors import db
 from bookstore.db_connectors.abstract_connector import BookSearchCategory
 from flask_login import current_user, login_user, logout_user
@@ -43,16 +43,17 @@ def search_results(search):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
+    login_form = LoginForm()
+    if login_form.validate_on_submit():
         # flash('Login requested for user {}, remember_me={}'.format(form.usermail.data, form.remember_me.data))
-        user = db.get_user(form.usermail.data)
-        if not user or not user.check_passwd(form.password.data):
+        user = db.get_user(login_form.usermail.data)
+        if not user or not user.check_passwd(login_form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
+        login_user(user, remember=login_form.remember_me.data)
         return redirect(url_for('index'))
-    return render_template('login.html', global_title=NAME, after_title=' | Log In', form=form)
+    signup_form = SignupForm()
+    return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
 
 @app.route('/logout')
 def logout():
