@@ -236,7 +236,22 @@ def order():
         missing_fields.append('City')
     if not current_user.country:
         missing_fields.append('Country')
-    return render_template('order.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, missing_fields=missing_fields)
+    ids_cart = Cart.get_user_cart(current_user.user_id)
+    user_cart = []
+    if not ids_cart:
+        flash('Error') #TODO
+    for book_id, quantity in ids_cart.items():
+        book = db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]
+        user_cart.append({
+            'name': book.author + ": " + book.title + " (" + str(book.release) + ")",
+            'price': book.price-book.price*book.discount/100,
+            'quantity': quantity,
+            'cost': quantity*(book.price-book.price*book.discount/100)
+        })
+    total=0
+    for item in user_cart:
+        total+=item['cost']
+    return render_template('order.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, missing_fields=missing_fields, user_cart=user_cart, total=total)
 
 
 @app.route('/terms_of_use')

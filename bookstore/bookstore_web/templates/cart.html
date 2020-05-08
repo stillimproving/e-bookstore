@@ -6,8 +6,15 @@
             <p><a href="{{ url_for('item', book_id=book.book_id) }}">
                 {{ book.author }} <b>{{ book.title }}</b>  ({{ book.release }})
                 <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
-                                          alt={{ book.title }} width='50px'></a>,
-                quantity: {{ quantity }}
+                     alt={{ book.title }} width='50px'></a>, unit price:
+                {% if book.discount > 0 %}
+                <s>{{ '{:.2f}'.format(book.price) }} {{ currency }}</s>
+                    {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }} {{ currency }} (discount:
+                    {{ '{:.0f}'.format(book.discount) }}%)
+            {% else %}
+                {{ '{:.2f}'.format(book.price) }} {{ currency }}
+            {% endif %},
+            quantity: {{ quantity }}
                 <a href="{{ url_for('remove_cart_item', book_id=book.book_id) }}"
                    id=remove_cart_item_{{ book.book_id }}>
                     <button><i class="fa fa-trash-o"></i></button>
