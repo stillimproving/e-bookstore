@@ -12,11 +12,11 @@
         <h2>Your order:</h2>
         <table style="width:100%">
             <tr>
-                <th>item</th>
-                <th>unit price* [{{ currency }}]</th>
-                <th>quantity</th>
-                <th>cost [{{ currency }}]</th>
-            </tr>
+                <td><b>item</b></td>
+                <td><b>unit price* [{{ currency }}]</b></td>
+                <td><b>quantity</b></td>
+                <td><b>cost [{{ currency }}]</b></td>
+            </tr><b></b>
             {% for item in user_cart %}
                 <tr>
                     <td>{{ item['name'] }}</td>
@@ -26,10 +26,10 @@
                 </tr>
             {% endfor %}
             <tr>
-                <th></th>
-                <th></th>
-                <th align="right"><b>Total:</b></th>
-                <th><b>{{ '{:.2f}'.format(total) }}</b></th>
+                <td></td>
+                <td></td>
+                <td align="right"><b>Total:</b></td>
+                <td align="left"><b>{{ '{:.2f}'.format(total) }}</b></td>
             </tr>
         </table>
 
