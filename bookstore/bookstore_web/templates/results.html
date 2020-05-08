@@ -8,11 +8,24 @@
                 <hr>
                 <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})</a>
                 <br>
-                <a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='200px'></a>
+                <a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt='{{ book.title }}' width='200px'></a>
                 <br>
-                {% if current_user.is_authenticated %}
-                    Add to cart!
-                {% endif %}
+            {% if current_user.is_authenticated %}
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                <script type=text/javascript>
+                    $(function () {
+                        $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
+                            $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
+                                function (data) {
+                                });
+                            return false;
+                        });
+                    });
+                </script>
+                <form><a href=# id=add_to_cart_{{ book.book_id }}>
+                    <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                </a></form>
+            {% endif %}
             </p>
         </div>
     {% endfor %}

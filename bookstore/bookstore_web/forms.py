@@ -43,6 +43,7 @@ class EditUserForm(FlaskForm):
     country = StringField('Country')
     submit = SubmitField('Submit')
 
+
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old password', validators=[DataRequired()])
     new_password = PasswordField('New password', validators=[DataRequired()])

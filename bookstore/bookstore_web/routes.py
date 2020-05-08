@@ -3,12 +3,13 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.datastructures import MultiDict
 
 from bookstore.bookstore_web import app
-from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm, EditUserForm, ChangePasswordForm, DeleteUserForm
+from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm, EditUserForm, \
+    ChangePasswordForm, DeleteUserForm
 from bookstore.db_connectors import db
 from bookstore.db_connectors.abstract_connector import BookSearchCategory
-from bookstore.models import User
+from bookstore.models import User, Cart
 
-NAME = 'e-Bookstore'
+NAME = 'E-BOOKSTORE'
 CURRENCY = 'PLN'
 
 
@@ -20,7 +21,8 @@ def index():
     search = SearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
-    return render_template('index.html', global_title=NAME, after_title=" | Home", currency=CURRENCY, books=books, search=search, discount=discount)
+    return render_template('index.html', global_title=NAME, position='../', after_title=" | Home", currency=CURRENCY, books=books, search=search, discount=discount)
+
 
 @app.route('/results')
 def search_results(search):
@@ -40,7 +42,7 @@ def search_results(search):
     if not results:
         flash('No results found for ' + search_type + ': "' + search_string + '"!')
         return redirect('/')
-    return render_template('results.html', global_title=NAME, after_title=" | Search results", search=search, results=results)
+    return render_template('results.html', global_title=NAME, position='../', after_title=" | Search results", search=search, results=results)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -79,7 +81,7 @@ def login():
         else:
             flash('Something gone wrong, try again')
         return redirect(url_for('login'))
-    return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
+    return render_template('login.html', global_title=NAME, position='../', after_title=' | Log In', login_form=login_form, signup_form=signup_form)
 
 
 @app.route('/logout')
@@ -91,7 +93,7 @@ def logout():
 @app.route('/user')
 @login_required
 def user():
-    return render_template('user.html', global_title=NAME, after_title=' | Profile')
+    return render_template('user.html', global_title=NAME, position='../', after_title=' | Profile')
 
 
 @app.route('/edit_user', methods=['GET', 'POST'])
@@ -131,7 +133,7 @@ def edit_user():
         else:
             flash('Something gone wrong, try again')
             return redirect(url_for('edit_user'))
-    return render_template('edit_user.html', global_title=NAME, after_title=' | Edit profile', edit_user_form=edit_user_form)
+    return render_template('edit_user.html', global_title=NAME, position='../', after_title=' | Edit profile', edit_user_form=edit_user_form)
 
 
 @app.route('/change_password', methods=['GET', 'POST'])
@@ -162,7 +164,7 @@ def change_password():
         else:
             flash('Invalid old password')
             return redirect(url_for('change_password'))
-    return render_template('change_password.html', global_title=NAME, after_title=' | Change password', change_pass_form=change_pass_form)
+    return render_template('change_password.html', global_title=NAME, position='../', after_title=' | Change password', change_pass_form=change_pass_form)
 
 
 @app.route('/delete_user', methods=['GET', 'POST'])
@@ -178,20 +180,38 @@ def delete_user():
         else:
             flash('Something gone wrong, try again')
             return redirect(url_for('delete_user'))
-    return render_template('delete_user.html', global_title=NAME, after_title=' | Delete account', delete_form=delete_form)
+    return render_template('delete_user.html', global_title=NAME, position='../', after_title=' | Delete account', delete_form=delete_form)
 
 
-@app.route('/item/<book_id>', methods=['GET'])
+@app.route('/item/<book_id>', methods=['GET', 'POST'])
 def item(book_id):
     book = db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]
-    return render_template('item.html', global_title=NAME, after_title=" | "+ book.title, currency=CURRENCY, book=book)
+    return render_template('item.html', global_title=NAME, position='../../', after_title=" | "+ book.title, currency=CURRENCY, book=book) #, add_to_cart_form=add_to_cart_form
+
+
+@app.route('/add_to_cart/<book_id>', methods=['GET'])
+def add_to_cart(book_id):
+    print ("Add to cart: "+book_id)
+    Cart.add_to_cart(current_user.user_id, book_id, 1)
+    return ("nothing")
+
+
+@app.route('/cart')
+@login_required
+def cart():
+    ids_cart = Cart.get_user_cart(current_user.user_id)
+    user_cart = dict()
+    if ids_cart:
+        for book_id, quantity in ids_cart.items():
+            user_cart[db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]] = quantity
+    return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, user_cart=user_cart)
 
 
 @app.route('/terms_of_use')
 def terms_of_use():
-    return render_template('terms_of_use.html', global_title=NAME, after_title=' | Terms of use')
+    return render_template('terms_of_use.html', global_title=NAME, position='../', after_title=' | Terms of use')
 
 
 @app.route('/privacy_policy')
 def privacy_policy():
-    return render_template('privacy_policy.html', global_title=NAME, after_title=' | Privacy policy')
+    return render_template('privacy_policy.html', global_title=NAME, position='../', after_title=' | Privacy policy')

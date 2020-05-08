@@ -51,3 +51,28 @@ class User(UserMixin):
 
     def get_id(self):
         return self.email
+
+
+class Cart:
+    _cart=dict()
+
+    @classmethod
+    def add_to_cart(cls, user_id, book_id, quantity):
+        cart = cls._cart.get(user_id)
+        if cart:
+            cls._cart[user_id][book_id]=quantity
+        else:
+            my_cart={book_id: quantity}
+            cls._cart[user_id]=my_cart
+        return True
+
+    @classmethod
+    def remove_from_cart(cls, user_id, book_id):
+        if cls._cart.get(user_id):
+            cls._cart[user_id].pop(book_id, None)
+            return True
+        return False
+
+    @classmethod
+    def get_user_cart(cls, user_id):
+        return cls._cart.get(user_id)
