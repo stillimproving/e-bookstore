@@ -207,6 +207,23 @@ def cart():
     return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, user_cart=user_cart)
 
 
+@app.route('/order')
+@login_required
+def order():
+    missing_fields=[]
+    if not current_user.phone:
+        missing_fields.append('Phone')
+    if not current_user.street:
+        missing_fields.append('Street')
+    if not current_user.postal_code:
+        missing_fields.append('Postal code')
+    if not current_user.city:
+        missing_fields.append('City')
+    if not current_user.country:
+        missing_fields.append('Country')
+    return render_template('order.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, missing_fields=missing_fields)
+
+
 @app.route('/terms_of_use')
 def terms_of_use():
     return render_template('terms_of_use.html', global_title=NAME, position='../', after_title=' | Terms of use')

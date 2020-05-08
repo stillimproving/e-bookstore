@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Order</h1>
+    {% if missing_fields %}
+        <h3 style="color: red;" >Before you order items...</h3>
+        <p>Following data are missing in your account:</p>
+        {% for field in missing_fields %}
+            <li>{{ field }}</li>
+        {% endfor %}
+        <p>Please complete your profile: <a href={{ url_for('edit_user') }}>edit profile data</a></p>
+    {% else %}
+        <p>Order further steps</p> {# TODO #}
+    {% endif %}
+{% endblock %}

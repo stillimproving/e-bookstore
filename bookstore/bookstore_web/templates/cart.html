@@ -3,8 +3,9 @@
     <h1>Cart</h1>
     {% if user_cart %}
         {% for book, quantity in user_cart.items() %}
-            <p>{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }}) <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='50px'>, quantity: {{ quantity }}        <button><i class="fa fa-trash-o"></i> (TODO)</button></p>
+            <p>{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }}) <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='50px'>, quantity: {{ quantity }}        <button><i class="fa fa-trash-o"></i> {# TODO #}</button></p>
         {% endfor %}
+        <a href="{{ url_for('order') }}"><button>Order</button></a>
     {% else %}
         <p>Your cart is empty</p>
     {% endif %}
