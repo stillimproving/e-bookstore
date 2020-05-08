@@ -3,9 +3,10 @@ from flask_login import current_user, login_user, logout_user, login_required
 
 from bookstore.bookstore_web import app
 from bookstore.bookstore_web.forms import LoginForm, SignupForm, SearchForm
-from bookstore.db_connectors import db
-from bookstore.db_connectors.abstract_connector import BookSearchCategory
-from bookstore.models import User
+
+from bookstore.models import BooksDB, BookSearchCategory
+from bookstore.models import CustomersDB, Customer
+
 
 NAME = 'e-Bookstore'
 CURRENCY = 'PLN'
@@ -14,12 +15,14 @@ CURRENCY = 'PLN'
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    discount=25
-    books = db.search_books(category=BookSearchCategory.DISCOUNT, search_text=discount, operator='>=')[:5]
+    discount = 25
+    books = BooksDB.search(category=BookSearchCategory.DISCOUNT, search_text=discount, operator='>=')[:5]
     search = SearchForm(request.form)
     if request.method == 'POST':
         return search_results(search)
-    return render_template('index.html', global_title=NAME, after_title=" | Home", currency=CURRENCY, books=books, search=search, discount=discount)
+    return render_template('index.html', global_title=NAME, after_title=" | Home", currency=CURRENCY, books=books,
+                           search=search, discount=discount)
+
 
 @app.route('/results')
 def search_results(search):
@@ -35,11 +38,12 @@ def search_results(search):
         'Publisher': BookSearchCategory.PUBLISHER,
         'ISBN': BookSearchCategory.ISBN}
 
-    results = db.search_books(category=enum_map[search_type], search_text=search_string)
+    results = BooksDB.search(category=enum_map[search_type], search_text=search_string)
     if not results:
         flash('No results found for ' + search_type + ': "' + search_string + '"!')
         return redirect('/')
-    return render_template('results.html', global_title=NAME, after_title=" | Search results", search=search, results=results)
+    return render_template('results.html', global_title=NAME, after_title=" | Search results", search=search,
+                           results=results)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -49,51 +53,55 @@ def login():
     login_form = LoginForm(prefix='log')
     if login_form.submit.data and login_form.validate_on_submit():
         # flash('Login requested for user {}, remember_me={}'.format(form.usermail.data, form.remember_me.data))
-        user = db.get_user(login_form.usermail.data)
-        if not user or not user.check_passwd(login_form.password.data):
+        user = CustomersDB.get(login_form.usermail.data)
+        if not user or not user.check_pass(login_form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=login_form.remember_me.data)
         return redirect(url_for('index'))
     signup_form = SignupForm(prefix='sign')
     if signup_form.submit.data and signup_form.validate_on_submit():
-        if db.get_user(signup_form.email.data):
+        if CustomersDB.get(signup_form.email.data):
             flash('Given e-mail already registered')
             return redirect(url_for('login'))
 
-        new_user = User(
+        new_user = Customer(
             name=signup_form.name.data,
             surname=signup_form.surname.data,
-            password = signup_form.password.data,
-            street = signup_form.street.data,
-            email = signup_form.email.data,
-            phone = signup_form.phone.data,
-            postal_code = signup_form.postal_code.data,
-            city = signup_form.city.data,
-            country = signup_form.country.data
+            password=signup_form.password.data,
+            street=signup_form.street.data,
+            email=signup_form.email.data,
+            phone=signup_form.phone.data,
+            postal_code=signup_form.postal_code.data,
+            city=signup_form.city.data,
+            country=signup_form.country.data
         )
-        success=db.add_user(new_user)
+        success = CustomersDB.add(new_user)
         if success:
             flash('You are registered, plaease Log in!')
         else:
             flash('Something gone wrong, try again')
         return redirect(url_for('login'))
-    return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form, signup_form=signup_form)
+    return render_template('login.html', global_title=NAME, after_title=' | Log In', login_form=login_form,
+                           signup_form=signup_form)
+
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/user')
 @login_required
 def user():
     return render_template('user.html', global_title=NAME, after_title=' | Profile')
 
+
 @app.route('/item/<book_id>', methods=['GET'])
 def item(book_id):
-    book = db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]
-    return render_template('item.html', global_title=NAME, after_title=" | "+ book.title, currency=CURRENCY, book=book)
+    book = BooksDB.get(key=book_id)
+    return render_template('item.html', global_title=NAME, after_title=" | " + book.title, currency=CURRENCY, book=book)
 
 
 @app.route('/terms_of_use')
