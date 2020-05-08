@@ -15,7 +15,8 @@ class SignupForm(FlaskForm):
     surname = StringField('Last name', validators=[DataRequired()])
     email = StringField('Email address', validators=[DataRequired(), Email('Not an email address')])
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password', message='Confirmation password doesn\'t match Password')])
+    confirm = PasswordField('Confirm password', validators=[
+        DataRequired(), EqualTo('password', message='Confirmation password doesn\'t match Password')])
     phone = StringField('Phone')
     street = StringField('Street')
     postal_code = StringField('Postal code')
@@ -27,8 +28,12 @@ class SignupForm(FlaskForm):
 
 class SearchForm(Form):
     search_input = StringField('Search')
-    choices = [('Title', 'Title'), ('Author', 'Author'), ('Category', 'Category'), ('Publisher', 'Publisher'),
-               ('ISBN', 'ISBN')]
+    choices = [
+        ('Title', 'Title'),
+        ('Author', 'Author'),
+        ('Category', 'Category'),
+        ('Publisher', 'Publisher'),
+        ('ISBN', 'ISBN')]
     type = SelectField('Search type', choices=choices)
     submit = SubmitField('🔍')
 
