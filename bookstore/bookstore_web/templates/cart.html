@@ -3,7 +3,16 @@
     <h1>Cart</h1>
     {% if user_cart %}
         {% for book, quantity in user_cart.items() %}
-            <p>{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }}) <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt={{ book.title }} width='50px'>, quantity: {{ quantity }}        <button><i class="fa fa-trash-o"></i> {# TODO #}</button></p>
+            <p><a href="{{ url_for('item', book_id=book.book_id) }}">
+                {{ book.author }} <b>{{ book.title }}</b>  ({{ book.release }})
+                <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
+                                          alt={{ book.title }} width='50px'></a>,
+                quantity: {{ quantity }}
+                <a href="{{ url_for('remove_cart_item', book_id=book.book_id) }}"
+                   id=remove_cart_item_{{ book.book_id }}>
+                    <button><i class="fa fa-trash-o"></i></button>
+                </a>
+            </p>
         {% endfor %}
         <a href="{{ url_for('order') }}"><button>Order</button></a>
     {% else %}

@@ -190,9 +190,13 @@ def item(book_id):
 
 
 @app.route('/add_to_cart/<book_id>', methods=['GET'])
+@login_required
 def add_to_cart(book_id):
-    print ("Add to cart: "+book_id)
-    Cart.add_to_cart(current_user.user_id, book_id, 1)
+    user_cart = Cart.get_user_cart(current_user.user_id)
+    count = 0
+    if user_cart:
+        count = user_cart.get(book_id, 0)
+    Cart.add_to_cart(current_user.user_id, book_id, count+1)
     return ("nothing")
 
 
@@ -205,6 +209,17 @@ def cart():
         for book_id, quantity in ids_cart.items():
             user_cart[db.search_books(category=BookSearchCategory.ID, search_text=book_id)[0]] = quantity
     return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY, user_cart=user_cart)
+
+
+@app.route('/remove_cart_item/<book_id>', methods=['GET', 'POST'])
+@login_required
+def remove_cart_item(book_id):
+    success = Cart.remove_from_cart(current_user.user_id, book_id)
+    if success:
+        flash('Item has been removed from your cart')
+    else:
+        flash('Something gone wrong, try again')
+    return redirect(url_for('cart'))
 
 
 @app.route('/order')
