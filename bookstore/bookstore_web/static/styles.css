@@ -37,6 +37,10 @@ h1 {
     text-decoration: none;
 }
 
+s {
+    color: #696763;
+}
+
 a:hover, a:focus {
     outline: none;
     text-decoration: none;

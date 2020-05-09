@@ -23,8 +23,8 @@
                         <form><a href=# id=add_to_cart_{{ book.book_id }}>
                             <button><i name="button" class="fa fa-shopping-cart"></i> Add to cart</button>
                         </a></form>
-                        </div>
                     {% endif %}
+                </div>
                 <div style="float:left; width:42%; text-align: center">
                     <a href="{{ url_for('item', book_id=book.book_id) }}"><img
                             src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
