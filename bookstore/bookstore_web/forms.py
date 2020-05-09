@@ -4,30 +4,58 @@ from wtforms.validators import DataRequired, EqualTo, Email
 
 
 class LoginForm(FlaskForm):
-    usermail = StringField('Email address', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    usermail = StringField(
+        label='Email address',
+        validators=[DataRequired(message='required')],
+        render_kw={'placeholder': 'Email address'})
+    password = PasswordField(
+        label='Password',
+        validators=[DataRequired(message='required')],
+        render_kw={'placeholder': 'Password'})
     remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Log In', render_kw={'id': 'login_submit'})
+    submit = SubmitField('Log In')
 
 
 class SignupForm(FlaskForm):
-    name = StringField('First name', validators=[DataRequired()])
-    surname = StringField('Last name', validators=[DataRequired()])
-    email = StringField('Email address', validators=[DataRequired(), Email('Not an email address')])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm = PasswordField('Confirm password', validators=[
-        DataRequired(), EqualTo('password', message='Confirmation password doesn\'t match Password')])
-    phone = StringField('Phone')
-    street = StringField('Street')
-    postal_code = StringField('Postal code')
-    city = StringField('City')
-    country = StringField('Country')
-    accept = BooleanField('I accept ', validators=[DataRequired()])
-    submit = SubmitField('Sign In', render_kw={'id': 'signup_submit'})
+    name = StringField(
+        label='First name',
+        validators=[DataRequired(message='required')],
+        render_kw={'placeholder': 'First name'})
+    surname = StringField(
+        label='Last name',
+        validators=[DataRequired(message='required')],
+        render_kw={'placeholder': 'Last name'})
+    email = StringField(
+        label='Email address',
+        validators=[DataRequired(message='required'), Email('not an email')],
+        render_kw={'placeholder': 'Email address'})
+    password = PasswordField(
+        label='Password', validators=[DataRequired(message='required')],
+        render_kw={'placeholder': 'Password'})
+    confirm = PasswordField(
+        label='Confirm password', validators=[DataRequired(message='required'), EqualTo('password', message='no match')],
+        render_kw={'placeholder': 'Confirm password'})
+    phone = StringField(
+        label='Phone',
+        render_kw={'placeholder': 'Phone'})
+    street = StringField(
+        label='Street',
+        render_kw={'placeholder': 'Street'})
+    postal_code = StringField(
+        label='Postal code',
+        render_kw={'placeholder': 'Postal code'})
+    city = StringField(
+        label='City',
+        render_kw={'placeholder': 'City'})
+    country = StringField(
+        label='Country',
+        render_kw={'placeholder': 'Country'})
+    accept = BooleanField(label='I accept ', validators=[DataRequired(message='required')])
+    submit = SubmitField(label='Sign In')
 
 
 class SearchForm(Form):
-    search_input = StringField('Search')
+    search_input = StringField('Search', render_kw={'type': 'search', 'placeholder': 'Search for books...'})
     choices = [
         ('Title', 'Title'),
         ('Author', 'Author'),
@@ -39,20 +67,29 @@ class SearchForm(Form):
 
 
 class EditUserForm(FlaskForm):
-    name = StringField('First name', validators=[DataRequired()])
-    surname = StringField('Last name', validators=[DataRequired()])
-    phone = StringField('Phone')
-    street = StringField('Street')
-    postal_code = StringField('Postal code')
-    city = StringField('City')
-    country = StringField('Country')
-    submit = SubmitField('Submit')
+    name = StringField('First name', validators=[DataRequired()], render_kw={'id': 'edit'})
+    surname = StringField('Last name', validators=[DataRequired()], render_kw={'id': 'edit'})
+    phone = StringField('Phone', render_kw={'id': 'edit'})
+    street = StringField('Street', render_kw={'id': 'edit'})
+    postal_code = StringField('Postal code', render_kw={'id': 'edit'})
+    city = StringField('City', render_kw={'id': 'edit'})
+    country = StringField('Country', render_kw={'id': 'edit'})
+    submit = SubmitField('Submit', render_kw={'id': 'edit'})
 
 
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField('Old password', validators=[DataRequired()])
-    new_password = PasswordField('New password', validators=[DataRequired()])
-    confirm = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('new_password', message='Confirmation password doesn\'t match New password')])
+    old_password = PasswordField(
+        label='Old password',
+        validators=[DataRequired()],
+        render_kw={'id': 'pass', 'placeholder': 'Old password'})
+    new_password = PasswordField(
+        label='New password',
+        validators=[DataRequired()],
+        render_kw={'id': 'pass', 'placeholder': 'New password'})
+    confirm = PasswordField(
+        label='Confirm password',
+        validators=[DataRequired(), EqualTo('new_password', message='Confirmation password doesn\'t match New password')],
+        render_kw={'id': 'pass', 'placeholder': 'Confirm password'})
     change = SubmitField('Change')
 
 

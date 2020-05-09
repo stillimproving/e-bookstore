@@ -260,8 +260,16 @@ def order():
     total = 0
     for books_in_cart in user_cart:
         total += books_in_cart['cost']
-    return render_template('order.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY,
+    return render_template('order.html', global_title=NAME, position='../', after_title=" | Order", currency=CURRENCY,
                            missing_fields=missing_fields, user_cart=user_cart, total=total)
+
+
+@app.route('/buy')
+@login_required
+def buy():
+    order_id='12lbbrs0123456fgb789'
+    # TODO: clear cart
+    return render_template('buy.html', global_title=NAME, position='../', after_title=' | Payment', order_id=order_id)
 
 
 @app.route('/terms_of_use')
