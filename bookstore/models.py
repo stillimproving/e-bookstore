@@ -114,8 +114,7 @@ class BooksDB:
         if not book:
             return False
         values = {'$inc': {"Quantity": -count}}
-        db.update(table=cls._tbl, key=book.book_id, values=values)
-        return True
+        return db.update(table=cls._tbl, key=book.book_id, values=values)
 
     @classmethod
     def _format_book(cls, raw_books):
@@ -199,6 +198,26 @@ class CustomersDB:
         return Customer(**customer)
 
 
+class OrderDB:
+    _tbl = 'orders'
+
+    @classmethod
+    def submit_order(cls, customer: Customer, total_price):
+        customer_id = customer.customer_id
+        customer_cart = Cart.pop_user_cart(customer_id)
+        value = {
+            'customer_id': customer_id,
+            "status": "NEW",
+            "date": "2020-05-07T20:55:53",
+            'total_price': total_price,
+            'card': [{'book_id': book_id, 'quantity': quantity} for book_id, quantity in customer_cart.items()]
+        }
+        response = db.add(table=cls._tbl, values=value)
+        order_id = response and response.get('order_id')
+        if order_id:
+            return order_id
+
+
 class Cart:
     _cart = dict()
 
@@ -222,3 +241,7 @@ class Cart:
     @classmethod
     def get_user_cart(cls, user_id):
         return cls._cart.get(user_id)
+
+    @classmethod
+    def pop_user_cart(cls, user_id):
+        return cls._cart.pop(user_id, None)

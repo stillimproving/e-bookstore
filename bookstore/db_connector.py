@@ -8,7 +8,7 @@ class RestDBioConnector:
     _url = DatabaseConfig.HOST
     _headers = {
         'content-type': "application/json",
-        'x-apikey': DatabaseConfig.APIKEY,
+        'x-apikey': DatabaseConfig.API_KEY,
         'cache-control': "no-cache"
     }
 
@@ -16,9 +16,13 @@ class RestDBioConnector:
     def add(cls, table, values):
         try:
             response = requests.request("POST", cls._url + table, data=dumps(values), headers=cls._headers)
-            return '_id' in response.text
         except requests.exceptions.ConnectionError:
-            return False
+            return None
+
+        if '_id' in response.text:
+            return loads(response.text)
+
+        return None
 
     @classmethod
     def search(cls, table, params):
