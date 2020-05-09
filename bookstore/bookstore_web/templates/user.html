@@ -2,14 +2,16 @@
 
 {% block content %}
     <h1>User: {{ current_user }}</h1>
-    <a href={{ url_for('change_password') }}>Change password</a>
-    <p>Email: {{ current_user.email }}</p>
-    <h3>Contact data:</h3>
-    <a href={{ url_for('edit_user') }}>Edit data</a>
-    <p>Phone: {{ current_user.phone }}</p>
-    <p>Street: {{ current_user.street }}</p>
-    <p>Postal code: {{ current_user.postal_code }}</p>
-    <p>City: {{ current_user.city }}</p>
-    <p>Country: {{ current_user.country }}</p>
-    <a style="color: red;" href={{ url_for('delete_user') }}>Delete user</a>
+    <div style="padding: 0 50px">
+        <p><span style="width: 100px; color: black">Email: </span><span name="profile">{{ current_user.email }}</span></p>
+        <a name="profile" href={{ url_for('change_password') }}>change password</a><br>
+        <h3 style="color: black; padding: 20px">Contact data:</h3>
+        <p><span style="width: 100px; color: black">Phone: </span><span name="profile">{{ current_user.phone }}</span></p>
+        <p><span style="width: 100px; color: black">Street: </span><span name="profile">{{ current_user.street }}</span></p>
+        <p><span style="width: 100px; color: black">Postal code: </span><span name="profile">{{ current_user.postal_code }}</span></p>
+        <p><span style="width: 100px; color: black">City: </span><span name="profile">{{ current_user.city }}</span></p>
+        <p><span style="width: 100px; color: black">Country: </span><span name="profile">{{ current_user.country }}</span></p>
+        <a name="profile" href={{ url_for('edit_user') }}>edit data</a>
+        <a name="profile" style="color: red; width: 200px;" href={{ url_for('delete_user') }}>delete user</a>
+    </div>
 {% endblock %}

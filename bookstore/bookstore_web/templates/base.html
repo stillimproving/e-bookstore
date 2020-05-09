@@ -3,29 +3,29 @@
 <head>
     <title>{{ global_title + after_title }}</title>
     <link rel="icon" href="{{ position }}static/files/images/bookmeister.ico" type="image/x-icon">
-{#    <link href="../static/styles.css" rel="stylesheet">#}
+    <link href="{{ position }}static/styles.css" rel="stylesheet">
     <link href="{{ position }}static/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header>
+    <header style="padding: 20px">
         <div>
             <div class="pull-left">
-                <span>{{ global_title }}: </span>
-                <a href={{ url_for('index') }}><i class="fa fa-home"></i> home</a>
+                <span>{# <img src="{{ position }}static/files/images/logo.png" alt="{{ global_title }}: " height="40px"> #}{{ global_title }}: </span>
+                <a name="nav" href={{ url_for('index') }}><i class="fa fa-home"></i> home</a>
             </div>
             <div class="pull-right">
                 {% if current_user.is_anonymous %}
-                    <a href="{{ url_for('login') }}"><i class="fa fa-lock"></i> login</a>
+                    <a name="nav" href="{{ url_for('login') }}"><i class="fa fa-lock"></i> login</a>
                 {% else %}
                     <span>Hello, {{ current_user }}! </span>
-                    <a href="{{ url_for('user') }}"><i class="fa fa-user"></i> account</a>
-                    <a href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i> cart</a>
-                    <a href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> logout</a>
+                    <a name="nav" href="{{ url_for('user') }}"><i class="fa fa-user"></i> account</a>
+                    <a name="nav" href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i> cart</a>
+                    <a name="nav" href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> logout</a>
                 {% endif %}
             </div>
         </div>
     <br>
-{#    <a href={{ url_for('index') }}><img src="{{ position }}static/files/images/logo.png"></a>#}
     </header>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -38,10 +38,9 @@
         {% endwith %}
     <br>
     {% block content %}{% endblock %}
-    <footer>
-        <hr>
-        <a href={{ url_for('terms_of_use') }}>Terms of use</a>
-        <a href={{ url_for('privacy_policy') }}>Privacy policy</a>
+    <footer style="padding: 20px; text-align: center; margin-top: 20px">
+        <a name="nav" href={{ url_for('terms_of_use') }}>terms of use</a>
+        <a name="nav" href={{ url_for('privacy_policy') }}>privacy policy</a>
     </footer>
 </body>
 </html>

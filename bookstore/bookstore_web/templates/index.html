@@ -3,40 +3,47 @@
 {% block content %}
     <br>
     <form method="POST">
-        <p>
+        <p style="padding: 0 20px; text-align: center">
             {{ search.search_input }}
             {{ search.type }}
             {{ search.submit() }}
         </p>
     </form>
-    <hr>
     <h1>We recommend you books with discount {{ discount }}% and even more!</h1>
-    {% for book in books %}
-        <div>
-            <p>
-                <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})</a>
-                <br>
-                <s>{{ '{:.2f}'.format(book.price) }} {{ currency }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }} {{ currency }}, discount: {{ '{:.0f}'.format(book.discount) }}%
-                <br>
-                <a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt='{{ book.title }}' width='200px'></a>
-                {% if current_user.is_authenticated %}
-                    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-                    <script type=text/javascript>
-                        $(function () {
-                            $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
-                                $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
-                                    function (data) {
-                                    });
-                                return false;
+    <div style="padding: 0 20px">
+        {% for book in books %}
+            <div style="overflow:auto; padding: 50px;">
+            <div style="float:left; width:42%; padding: 50px 0; text-align: center">
+
+                    <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b>
+                        ({{ book.release }})</a>
+                    <br>
+                    <s>{{ '{:.2f}'.format(book.price) }} {{ currency }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }} {{ currency }},
+                    discount: {{ '{:.0f}'.format(book.discount) }}%
+                    <br>
+                    {% if current_user.is_authenticated %}
+                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                        <script type=text/javascript>
+                            $(function () {
+                                $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
+                                    $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
+                                        function (data) {
+                                        });
+                                    return false;
+                                });
                             });
-                        });
-                    </script>
-                    <form><a href=# id=add_to_cart_{{ book.book_id }}>
-                        <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
-                    </a></form>
-                {% endif %}
-                <hr>
-            </p>
-        </div>
-    {% endfor %}
+                        </script>
+                        <form><a href=# id=add_to_cart_{{ book.book_id }}>
+                            <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                        </a></form>
+                    {% endif %}
+            </div>
+            <div style="float:left; width:42%; text-align: center;">
+                <a href="{{ url_for('item', book_id=book.book_id) }}"><img
+                        src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
+                        alt='{{ book.title }}' width='200px'></a>
+            </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

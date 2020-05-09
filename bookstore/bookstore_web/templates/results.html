@@ -2,31 +2,35 @@
 
 {% block content %}
     <h1>Search results for {{ search.data['type'] }}: "{{ search.data['search_input'] }}"</h1>
-    {% for book in results %}
-        <div>
-            <p>
-                <hr>
-                <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b> ({{ book.release }})</a>
-                <br>
-                <a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t' alt='{{ book.title }}' width='200px'></a>
-                <br>
-            {% if current_user.is_authenticated %}
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-                <script type=text/javascript>
-                    $(function () {
-                        $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
-                            $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
-                                function (data) {
+    <div style="padding: 0 20px">
+        {% for book in results %}
+            <div style="overflow:auto; padding: 50px;">
+                <div style="float:left; width:42%; padding: 50px 0; text-align: center">
+                    <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b>
+                        ({{ book.release }})</a>
+                    {% if current_user.is_authenticated %}
+                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                        <script type=text/javascript>
+                            $(function () {
+                                $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
+                                    $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
+                                        function (data) {
+                                        });
+                                    return false;
                                 });
-                            return false;
-                        });
-                    });
-                </script>
-                <form><a href=# id=add_to_cart_{{ book.book_id }}>
-                    <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
-                </a></form>
-            {% endif %}
-            </p>
-        </div>
-    {% endfor %}
+                            });
+                        </script>
+                        <form><a href=# id=add_to_cart_{{ book.book_id }}>
+                            <button><i name="button" class="fa fa-shopping-cart"></i> Add to cart</button>
+                        </a></form>
+                        </div>
+                    {% endif %}
+                <div style="float:left; width:42%; text-align: center">
+                    <a href="{{ url_for('item', book_id=book.book_id) }}"><img
+                            src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
+                            alt='{{ book.title }}' width='200px'></a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

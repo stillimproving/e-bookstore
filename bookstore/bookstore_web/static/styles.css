@@ -1,7 +1,145 @@
-/*header {*/
-/*  background-color: #666;*/
-/*  padding: 30px;*/
-/*  text-align: center;*/
-/*  font-size: 35px;*/
-/*  color: white;*/
-/*}*/
+div {
+    border: 1px solid white;
+}
+
+* {
+    font-family: 'Roboto', sans-serif;
+}
+
+span {
+    display: inline-block;
+}
+
+span[name=profile] {
+    color: #696763;
+}
+
+a, i {
+    text-decoration: none;
+    color: black;
+}
+
+a[name=nav] {
+    padding: 10px 20px;
+    border: 1px solid black;
+}
+
+a:hover, b:hover {
+    color: #1C8ADB;
+}
+
+a[name=nav]:hover {
+    border: 1px solid #1C8ADB;
+}
+
+h1 {
+    outline: none;
+    text-decoration: none;
+}
+
+a:hover, a:focus {
+    outline: none;
+    text-decoration: none;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    color: #1C8ADB;
+}
+
+input[type=text], input[type=password] {
+    background: #F0F0E9;
+    border: medium none;
+    color: #696763;
+    display: block;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    height: 40px;
+    margin-bottom: 10px;
+    outline: medium none;
+    padding-left: 10px;
+    width: 90%;
+}
+
+input[type=search] {
+    background: #F0F0E9;
+    border: medium none;
+    color: #696763;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    height: 40px;
+    outline: medium none;
+    padding: 7px 17px;
+    width: 30%;
+}
+
+input[id=pass], input[id=edit] {
+    width: 30%;
+}
+
+select {
+    background: #1C8ADB;
+    color: white;
+    border: medium none;
+    border-radius: 0;
+    height: 40px;
+    padding: 7px 17px;
+}
+
+select:hover, select:focus {
+    background-color: #ebebeb;
+    color: black;
+    outline: none;
+}
+
+button, input[type=button], input[type=submit], a[name=profile] {
+    background: #1C8ADB;
+    color: white;
+    border: medium none;
+    border-radius: 0;
+    height: 40px;
+    padding: 7px 17px;
+}
+
+i[name=button] {
+    color: white;
+}
+
+button:hover, button:focus, input[type=button]:hover, input[type=button]:focus, input[type=submit]:hover, input[type=submit]:focus, a[name=profile]:hover, a[name=profile]:focus {
+    background-color: #ebebeb;
+    color: black;
+    outline: none;
+}
+
+i[name=button]:hover, i[name=button]:focus {
+    color: black;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #ebebeb;
+    border: 1px solid #ebebeb;
+}
+
+tr:hover {
+    background-color: #ddd;
+    border: 1px solid #ddd;
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #1C8ADB;
+    color: white;
+}
