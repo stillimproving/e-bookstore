@@ -264,6 +264,12 @@ def order():
                            missing_fields=missing_fields, user_cart=user_cart, total=total)
 
 
+@app.route('/buy')
+def buy():
+    order_id='12lbbrs0123456fgb789'
+    return render_template('buy.html', global_title=NAME, position='../', after_title=' | Payment', order_id=order_id)
+
+
 @app.route('/terms_of_use')
 def terms_of_use():
     return render_template('terms_of_use.html', global_title=NAME, position='../', after_title=' | Terms of use')

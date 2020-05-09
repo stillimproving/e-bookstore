@@ -44,10 +44,7 @@
                 <br>
                 {{ current_user.country }}<br>(phone: {{ current_user.phone }})
             </div>
-
-            <p style="padding: 0 50px">
-                <button>Confirm & Pay</button>
-            </p>
+            <a style="padding: 0 50px" href="{{ url_for('buy') }}"><button>Confirm & Pay</button></a>
         {% endif %}
     </div>
 {% endblock %}
