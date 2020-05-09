@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum, unique
 
 from flask_login import UserMixin
@@ -208,7 +209,7 @@ class OrderDB:
         value = {
             'customer_id': customer_id,
             "status": "NEW",
-            "date": "2020-05-07T20:55:53",
+            "date": datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
             'total_price': total_price,
             'card': [{'book_id': book_id, 'quantity': quantity} for book_id, quantity in customer_cart.items()]
         }

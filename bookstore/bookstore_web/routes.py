@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.datastructures import MultiDict
 
-from bookstore.models import BooksDB, BookSearchCategory
+from bookstore.models import BooksDB, BookSearchCategory, OrderDB
 from bookstore.models import CustomersDB, Customer
 from bookstore.models import Cart
 
@@ -267,8 +267,20 @@ def order():
 @app.route('/buy')
 @login_required
 def buy():
-    order_id='12lbbrs0123456fgb789'
-    # TODO: clear cart
+    ids_cart = Cart.get_user_cart(current_user.customer_id)
+    user_cart = []
+    for book_id, quantity in ids_cart.items():
+        book = BooksDB.get(key=book_id)
+        user_cart.append({
+            'name': book.author + ": " + book.title + " (" + str(book.release) + ")",
+            'price': book.price - book.price * book.discount / 100,
+            'quantity': quantity,
+            'cost': quantity * (book.price - book.price * book.discount / 100)
+        })
+    total = 0
+    for books_in_cart in user_cart:
+        total += books_in_cart['cost']
+    order_id = OrderDB.submit_order(customer=current_user, total_price=total)
     return render_template('buy.html', global_title=NAME, position='../', after_title=' | Payment', order_id=order_id)
 
 
