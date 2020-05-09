@@ -211,7 +211,7 @@ class OrderDB:
             "status": "NEW",
             "date": datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
             'total_price': total_price,
-            'card': [{'book_id': book_id, 'quantity': quantity} for book_id, quantity in customer_cart.items()]
+            'cart': [{'book_id': book_id, 'quantity': quantity} for book_id, quantity in customer_cart.items()]
         }
         response = db.add(table=cls._tbl, values=value)
         order_id = response and response.get('order_id')

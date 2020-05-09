@@ -5,11 +5,11 @@ const beforePOST = async (req,res) => {
         var hash = mykey.update('abc', 'utf8', 'hex');
         hash += mykey.final('hex');
         req.body['order_id'] = hash;
-        if(req.body.card){
-            req.body.card.forEach(x => x['order_id']=hash);
-            await db.post('/rest/order', req.body.card);
+        if(req.body.cart){
+            req.body.cart.forEach(x => x['order_id']=hash);
+            await db.post('/rest/order', req.body.cart);
         }
-        delete req.body.card;
+        delete req.body.cart;
         res.end({"data": req.body});
     }
     else {
