@@ -2,13 +2,15 @@
 
 {% block content %}
     <br>
-    <form method="POST">
-        <p style="padding: 0 20px; text-align: center">
-            {{ search.search_input }}
-            {{ search.type }}
-            {{ search.submit() }}
-        </p>
-    </form>
+    <div style="padding: 60px 0">
+        <form method="POST">
+            <p style="padding: 0 20px; text-align: center">
+                {{ search.search_input }}
+                {{ search.type }}
+                {{ search.submit() }}
+            </p>
+        </form>
+    </div>
     <h1>We recommend you books with discount {{ discount }}% and even more!</h1>
     <div style="padding: 0 20px">
         {% for book in books %}
@@ -39,7 +41,8 @@
                             </a></form>
                         {% endif %}
                     {% else %}
-                        <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span></p>
+                        <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span>
+                        </p>
                     {% endif %}
                 </div>
                 <div style="float:left; width:42%; text-align: center;">

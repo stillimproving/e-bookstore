@@ -1,17 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>User: {{ current_user }}</h1>
-    <div style="padding: 0 50px">
-        <p><span style="width: 100px; color: black">Email: </span><span name="profile">{{ current_user.email }}</span></p>
-        <a name="profile" href={{ url_for('change_password') }}>change password</a><br>
-        <h3 style="color: black; padding: 20px">Contact data:</h3>
-        <p><span style="width: 100px; color: black">Phone: </span><span name="profile">{{ current_user.phone }}</span></p>
-        <p><span style="width: 100px; color: black">Street: </span><span name="profile">{{ current_user.street }}</span></p>
-        <p><span style="width: 100px; color: black">Postal code: </span><span name="profile">{{ current_user.postal_code }}</span></p>
-        <p><span style="width: 100px; color: black">City: </span><span name="profile">{{ current_user.city }}</span></p>
-        <p><span style="width: 100px; color: black">Country: </span><span name="profile">{{ current_user.country }}</span></p>
-        <a name="profile" href={{ url_for('edit_user') }}>edit data</a>
-        <a name="profile" style="color: red; width: 200px;" href={{ url_for('delete_user') }}>delete user</a>
+    <div style="padding: 60px 0">
+        <h1>User: {{ current_user }}</h1>
+        <div style="padding: 0 50px">
+            <p><span style="width: 100px; color: black">Email: </span><span
+                    name="profile">{{ current_user.email }}</span></p>
+            <a name="profile" href={{ url_for('change_password') }}>change password</a><br>
+            <h3 style="color: black; padding: 20px">Contact data:</h3>
+            <p><span style="width: 100px; color: black">Phone: </span><span
+                    name="profile">{{ current_user.phone }}</span></p>
+            <p><span style="width: 100px; color: black">Street: </span><span
+                    name="profile">{{ current_user.street }}</span></p>
+            <p><span style="width: 100px; color: black">Postal code: </span><span
+                    name="profile">{{ current_user.postal_code }}</span></p>
+            <p><span style="width: 100px; color: black">City: </span><span name="profile">{{ current_user.city }}</span>
+            </p>
+            <p><span style="width: 100px; color: black">Country: </span><span
+                    name="profile">{{ current_user.country }}</span></p>
+            <a name="profile" href={{ url_for('edit_user') }}>edit data</a>
+            <a name="profile" style="color: red; width: 200px;" href={{ url_for('delete_user') }}>delete user</a>
+        </div>
     </div>
 {% endblock %}

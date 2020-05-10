@@ -8,20 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <header style="padding: 20px">
+    <header style="padding: 10px 20px">
         <div>
-            <div class="pull-left">
+            <div style="height: 50px" class="pull-left">
                 <span>{# <img src="{{ position }}static/files/images/logo.png" alt="{{ global_title }}: " height="40px"> #}{{ global_title }}: </span>
                 <a name="nav" href={{ url_for('index') }}><i class="fa fa-home"></i> home</a>
             </div>
-            <div class="pull-right">
+            <div style="height: 50px" class="pull-right">
                 {% if current_user.is_anonymous %}
                     <a name="nav" href="{{ url_for('login') }}"><i class="fa fa-lock"></i> login</a>
                 {% else %}
-                    <span>Hello, {{ current_user }}! </span>
-                    <a name="nav" href="{{ url_for('user') }}"><i class="fa fa-user"></i> account</a>
-                    <a name="nav" href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i> cart</a>
-                    <a name="nav" href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> logout</a>
+                    <span style="height: 50px">Hello, {{ current_user }}! </span>
+                    <span style="height: 50px"><a name="nav" href="{{ url_for('user') }}"><i class="fa fa-user"></i> account</a></span>
+                    <span style="height: 50px"><a name="nav" href="{{ url_for('cart') }}"><i class="fa fa-shopping-cart"></i> cart</a></span>
+                    <span style="height: 50px"><a name="nav" href="{{ url_for('logout') }}"><i class="fa fa-power-off"></i> logout</a></span>
                 {% endif %}
             </div>
         </div>
