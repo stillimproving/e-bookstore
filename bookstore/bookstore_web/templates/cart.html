@@ -6,8 +6,8 @@
         {% for book, quantity in user_cart.items() %}
             <div>
                 <span style="width: 40%"><a href="{{ url_for('item', book_id=book.book_id) }}">
-                {{ book.author }} <b>{{ book.title }}</b>  ({{ book.release }})
-                <img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
+                    {{ book.author }} <b>{{ book.title }}</b>  ({{ book.release }})</a></span>
+                <span style="width: 10%"><a href="{{ url_for('item', book_id=book.book_id) }}"><img src='https://bookstore-5217.restdb.io/media/{{ book.cover_image[0] }}?s=t'
                      alt={{ book.title }} width='50px'></a></span>
                 <span style="width: 30%">unit price:
                 {% if book.discount > 0 %}
@@ -17,8 +17,8 @@
             {% else %}
                 {{ '{:.2f}'.format(book.price) }} {{ currency }}
                 {% endif %}</span>
-                <span style="width: 15%">quantity: {{ quantity }}</span>
-                <span style="width: 10%"><a href="{{ url_for('remove_cart_item', book_id=book.book_id) }}"
+                <span style="width: 12%">quantity: {{ quantity }}</span>
+                <span style="width: 3%"><a href="{{ url_for('remove_cart_item', book_id=book.book_id) }}"
                    id=remove_cart_item_{{ book.book_id }}>
                     <button><i class="fa fa-trash-o"></i></button>
                 </a></span>

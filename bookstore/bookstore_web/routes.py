@@ -215,7 +215,12 @@ def cart():
     user_cart = dict()
     if ids_cart:
         for book_id, quantity in ids_cart.items():
-            user_cart[BooksDB.get(key=book_id)] = quantity
+            book = BooksDB.get(key=book_id)
+            if quantity <= book.quantity:
+                user_cart[book] = quantity
+            else:
+                user_cart[book] = book.quantity
+                Cart.add_to_cart(current_user.customer_id, book_id, book.quantity)
     return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY,
                            user_cart=user_cart)
 
@@ -248,7 +253,7 @@ def order():
     ids_cart = Cart.get_user_cart(current_user.customer_id)
     user_cart = []
     if not ids_cart:
-        flash('Error')  # TODO
+        flash('System reboot while refreshing order page. Unfortunately you have to complete your cart again')
     for book_id, quantity in ids_cart.items():
         book = BooksDB.get(key=book_id)
         user_cart.append({
