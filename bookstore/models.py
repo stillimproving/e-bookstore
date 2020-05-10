@@ -182,7 +182,7 @@ class CustomersDB:
 
     @classmethod
     def delete(cls, customer: Customer):
-        return db.delete(table=cls._tbl, key=customer.email)
+        return db.delete(table=cls._tbl, key=customer.customer_id)
 
     @classmethod
     def update(cls, customer: Customer):
