@@ -17,8 +17,8 @@
             {% else %}
                 <p> Price: <b>{{ '{:.2f}'.format(book.price) }} {{ currency }}</b></p>
             {% endif %}
-            {% if book.quantity!=0 %}
-                {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated %}
+                {% if book.quantity!=0 %}
                     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
                     <script type=text/javascript>
                         $(function () {
@@ -33,9 +33,11 @@
                     <form><a href=# id=add_to_cart_{{ book.book_id }}>
                         <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
                     </a></form>
+                {% else %}
+                    <p><span
+                            style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span>
+                    </p>
                 {% endif %}
-            {% else %}
-                <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span></p>
             {% endif %}
         </div>
         <div style="float:left; width:42%; text-align: center;">

@@ -11,7 +11,7 @@
             </p>
         </form>
     </div>
-    <h1>We recommend you books with discount {{ discount }}% and even more!</h1>
+    <h1>We recommend books with discount {{ discount }}% and even more!</h1>
     <div style="padding: 0 20px">
         {% for book in books %}
             <div style="overflow:auto; padding: 50px;">
@@ -23,8 +23,9 @@
                     <s>{{ '{:.2f}'.format(book.price) }} {{ currency }}</s> {{ '{:.2f}'.format(book.price - book.price*book.discount/100) }} {{ currency }},
                     discount: {{ '{:.0f}'.format(book.discount) }}%
                     <br>
-                    {% if book.quantity!=0 %}
-                        {% if current_user.is_authenticated %}
+
+                    {% if current_user.is_authenticated %}
+                        {% if book.quantity!=0 %}
                             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
                             <script type=text/javascript>
                                 $(function () {
@@ -39,11 +40,12 @@
                             <form><a href=# id=add_to_cart_{{ book.book_id }}>
                                 <button><i class="fa fa-shopping-cart"></i> Add to cart</button>
                             </a></form>
+                        {% else %}
+                            <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span>
+                            </p>
                         {% endif %}
-                    {% else %}
-                        <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span>
-                        </p>
                     {% endif %}
+
                 </div>
                 <div style="float:left; width:42%; text-align: center;">
                     <a href="{{ url_for('item', book_id=book.book_id) }}"><img
