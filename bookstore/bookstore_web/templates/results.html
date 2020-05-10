@@ -8,21 +8,25 @@
                 <div style="float:left; width:42%; padding: 50px 0; text-align: center">
                     <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b>
                         ({{ book.release }})</a>
-                    {% if current_user.is_authenticated and book.quantity!=0  %}
-                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-                        <script type=text/javascript>
-                            $(function () {
-                                $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
-                                    $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
-                                        function (data) {
-                                        });
-                                    return false;
+                    {% if book.quantity!=0 %}
+                        {% if current_user.is_authenticated %}
+                            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+                            <script type=text/javascript>
+                                $(function () {
+                                    $('a#add_to_cart_{{ book.book_id }}').bind('click', function () {
+                                        $.getJSON('{{ url_for("add_to_cart", book_id=book.book_id) }}',
+                                            function (data) {
+                                            });
+                                        return false;
+                                    });
                                 });
-                            });
-                        </script>
-                        <form><a href=# id=add_to_cart_{{ book.book_id }}>
-                            <button><i name="button" class="fa fa-shopping-cart"></i> Add to cart</button>
-                        </a></form>
+                            </script>
+                            <form><a href=# id=add_to_cart_{{ book.book_id }}>
+                                <button><i name="button" class="fa fa-shopping-cart"></i> Add to cart</button>
+                            </a></form>
+                        {% endif %}
+                    {% else %}
+                        <p><span style="color: #696763; border: solid 1px #696763; padding: 10px 20px;">Product unavailable</span></p>
                     {% endif %}
                 </div>
                 <div style="float:left; width:42%; text-align: center">
