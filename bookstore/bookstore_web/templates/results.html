@@ -8,7 +8,7 @@
                 <div style="float:left; width:42%; padding: 50px 0; text-align: center">
                     <a href="{{ url_for('item', book_id=book.book_id) }}">{{ book.author }} <b>{{ book.title }}</b>
                         ({{ book.release }})</a>
-                    {% if current_user.is_authenticated %}
+                    {% if current_user.is_authenticated and book.quantity!=0  %}
                         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
                         <script type=text/javascript>
                             $(function () {

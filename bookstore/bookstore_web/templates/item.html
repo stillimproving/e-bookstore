@@ -17,7 +17,7 @@
             {% else %}
                 <p> Price: <b>{{ '{:.2f}'.format(book.price) }} {{ currency }}</b></p>
             {% endif %}
-            {% if current_user.is_authenticated %}
+            {% if current_user.is_authenticated and book.quantity!=0 %}
                 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
                 <script type=text/javascript>
                     $(function () {

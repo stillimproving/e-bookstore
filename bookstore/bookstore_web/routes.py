@@ -213,14 +213,20 @@ def add_to_cart(book_id):
 def cart():
     ids_cart = Cart.get_user_cart(current_user.customer_id)
     user_cart = dict()
+    invalid_cart_items = []
     if ids_cart:
         for book_id, quantity in ids_cart.items():
             book = BooksDB.get(key=book_id)
             if quantity <= book.quantity:
                 user_cart[book] = quantity
-            else:
+            elif quantity > book.quantity != 0:
                 user_cart[book] = book.quantity
                 Cart.add_to_cart(current_user.customer_id, book_id, book.quantity)
+            else:
+                invalid_cart_items.append((book_id, book))
+    for invalid in invalid_cart_items:
+        Cart.remove_from_cart(current_user.customer_id, invalid[0])
+        user_cart.pop(invalid[1], None)
     return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY,
                            user_cart=user_cart)
 
