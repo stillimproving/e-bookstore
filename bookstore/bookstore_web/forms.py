@@ -80,15 +80,15 @@ class EditUserForm(FlaskForm):
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField(
         label='Old password',
-        validators=[DataRequired()],
+        validators=[DataRequired(message='required')],
         render_kw={'id': 'pass', 'placeholder': 'Old password'})
     new_password = PasswordField(
         label='New password',
-        validators=[DataRequired()],
+        validators=[DataRequired(message='required')],
         render_kw={'id': 'pass', 'placeholder': 'New password'})
     confirm = PasswordField(
         label='Confirm password',
-        validators=[DataRequired(), EqualTo('new_password', message='Confirmation password doesn\'t match New password')],
+        validators=[DataRequired(message='required'), EqualTo('new_password', message='no match')],
         render_kw={'id': 'pass', 'placeholder': 'Confirm password'})
     change = SubmitField('Change')
 

@@ -214,21 +214,41 @@ def cart():
     ids_cart = Cart.get_user_cart(current_user.customer_id)
     user_cart = dict()
     invalid_cart_items = []
+    no_discount_total = total = 0
     if ids_cart:
         for book_id, quantity in ids_cart.items():
             book = BooksDB.get(key=book_id)
             if quantity <= book.quantity:
                 user_cart[book] = quantity
+                no_discount_total += book.price*quantity
+                total += (book.price - book.price*book.discount/100)*quantity
             elif quantity > book.quantity != 0:
                 user_cart[book] = book.quantity
                 Cart.add_to_cart(current_user.customer_id, book_id, book.quantity)
+                no_discount_total += book.price*book.quantity
+                total += (book.price - book.price*book.discount/100)*book.quantity
             else:
                 invalid_cart_items.append((book_id, book))
     for invalid in invalid_cart_items:
         Cart.remove_from_cart(current_user.customer_id, invalid[0])
         user_cart.pop(invalid[1], None)
+
     return render_template('cart.html', global_title=NAME, position='../', after_title=" | Cart", currency=CURRENCY,
-                           user_cart=user_cart)
+                           user_cart=user_cart, no_discount_total=no_discount_total, total=total)
+
+
+@app.route('/refresh_cart_item/<book_id>', methods=['GET', 'POST'])
+@login_required
+def refresh_cart_item(book_id):
+    quantity = int(request.args.get('quantity', '0'))
+    if not quantity:
+        flash('Something wrong, quantity < 1')
+    success = Cart.add_to_cart(current_user.customer_id, book_id, quantity)
+    if success:
+        flash('Item has been updated')
+    else:
+        flash('Something gone wrong, try again')
+    return redirect(url_for('cart'))
 
 
 @app.route('/remove_cart_item/<book_id>', methods=['GET', 'POST'])
